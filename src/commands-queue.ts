@@ -6,7 +6,7 @@ import { exec as execImpl, config as shellConfig } from 'shelljs'
 import { Cmd, Config, Result } from '.';
 
 export class CommandsQueue {
-  private queue: any
+  private queue: PQueue
 
   constructor(protected config: Config) {
     this.queue = new PQueue(config)
@@ -32,4 +32,41 @@ export class CommandsQueue {
     }))
   }
 
+  pause(): void {
+    this.queue.pause()
+  }
+  start(): void {
+    this.queue.start()
+  }
+  clear(): void {
+    this.queue.start()
+  }
+  /**
+   * Returns a promise that settles when the queue becomes empty.
+   *
+   * Can be called multiple times. Useful if you for example add additional items at a later time.
+   */
+  onEmpty(): Promise<void> {
+    return this.queue.onEmpty()
+  }
+  /**
+   * Returns a promise that settles when the queue becomes empty, and all promises have completed; queue.size
+   * === 0 && queue.pending === 0.
+   *
+   * The difference with .onEmpty is that .onIdle guarantees that all work from the queue has finished.
+   * .onEmpty merely signals that the queue is empty, but it could mean that some promises haven't completed
+   * yet.
+   */
+  onIdle(): Promise<void> {
+    return this.queue.onIdle()
+  }
+  get size(): number {
+    return this.queue.size
+  }
+  get pending(): number {
+    return this.queue.pending
+  }
+  get isPaused(): boolean {
+    return this.queue.isPaused
+  }
 }
