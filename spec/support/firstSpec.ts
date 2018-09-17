@@ -17,7 +17,7 @@ describe('commander', () => {
 
     expect(test('-f', 'tmp.txt')).toBeTruthy()
 
-    rm('-f', 'tmp.*')
+    rm('-f', 'tmp*.*')
     done()
   })
 })
