@@ -4,9 +4,6 @@ import { ChildProcess } from 'child_process';
 import PQueue from 'p-queue'
 
 export interface Config extends PQueue.Options<any> {
-  // /** number of commands being executed concurrently. Default is 1 which means commands will be executed serially 1 by 1*/
-  // concurrency?: number
-
   shellConfig?: Partial<ShellConfig>
 }
 

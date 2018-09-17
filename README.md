@@ -17,7 +17,7 @@ const CommandQueue = require('commands-queue')
 const queue = new CommandQueue({concurrency: 2})
 queue.exec('cd project1 && npm install && npm run build && npm test')
 queue.exec('cd project2 && npm install && npm run build && npm test')
-queue.exec('cd project3 && npm install && npm run build && npm test').then(console.log('echo "almost there"'))
+queue.exec('cd project3 && npm install && npm run build && npm test').then(result=>console.log('echo "almost there", exit code: '+result.code))
 queue.exec('cd project4 && npm install && npm run build && npm test')
 ```
 
@@ -33,11 +33,8 @@ queue.exec('cd project1 && npm install && npm run build && npm test')
 queue.exec('cd project2 && npm install && npm run build && npm test')
 queue.exec('cd project3 && npm install && npm run build && npm test').then(console.log('echo "almost there"'))
 queue.exec('cd project4 && npm install && npm run build && npm test')
-const results = await queue.start((cmd, result)=>{
-  if(result.code===0)
-    console.log(`${cmd.value} execution ended ${result.code===0?'successfully':'with ERROR '+result.stderr}. `)
-})
-console.log('ALL WORK DONE')
+queue.onIdle().then(()=>console.log('ALL WORK DONE'))
+const results = await queue.start()
 ```
 
 # Documentation

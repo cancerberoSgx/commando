@@ -1,6 +1,6 @@
 {
   "name": "commands-queue",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "execute command line in a queue",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",

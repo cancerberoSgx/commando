@@ -42,8 +42,8 @@ export class CommandsQueue {
   * Same as .add(), but accepts an array of sync or async functions and returns a promise that resolves when
   * all functions are resolved.
   */
-  addAll<T>(fns: PQueue.Task<T>[], options?: PQueue.QueueAddOptions): Promise<T> {
-    return this.queue.add(fns, options)
+  addAll<T>(fns: PQueue.Task<T>[], options?: PQueue.QueueAddOptions): Promise<T[]> {
+    return this.queue.addAll(fns, options)
   }
   pause(): void {
     this.queue.pause()

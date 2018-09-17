@@ -75,7 +75,7 @@
 <span class="hljs-keyword">const</span> queue = <span class="hljs-keyword">new</span> CommandQueue({<span class="hljs-attr">concurrency</span>: <span class="hljs-number">2</span>})
 queue.exec(<span class="hljs-string">'cd project1 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>)
 queue.exec(<span class="hljs-string">'cd project2 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>)
-queue.exec(<span class="hljs-string">'cd project3 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>).then(<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'echo "almost there"'</span>))
+queue.exec(<span class="hljs-string">'cd project3 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>).then(<span class="hljs-function"><span class="hljs-params">result</span>=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'echo "almost there", exit code: '</span>+result.code))
 queue.exec(<span class="hljs-string">'cd project4 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>)</code></pre>
 				<p>Or similar to above but this time registering all the commands first and then start executing them programmatically:</p>
 				<p>(TODO)</p>
@@ -85,11 +85,10 @@ queue.exec(<span class="hljs-string">'cd project1 &amp;&amp; npm install &amp;&a
 queue.exec(<span class="hljs-string">'cd project2 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>)
 queue.exec(<span class="hljs-string">'cd project3 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>).then(<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'echo "almost there"'</span>))
 queue.exec(<span class="hljs-string">'cd project4 &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; npm test'</span>)
-<span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> queue.start(<span class="hljs-function">(<span class="hljs-params">cmd, result</span>)=&gt;</span>{
-  <span class="hljs-keyword">if</span>(result.code===<span class="hljs-number">0</span>)
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${cmd.value}</span> execution ended <span class="hljs-subst">${result.code===<span class="hljs-number">0</span>?<span class="hljs-string">'successfully'</span>:<span class="hljs-string">'with ERROR '</span>+result.stderr}</span>. `</span>)
-})
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ALL WORK DONE'</span>)</code></pre>
+queue.onIdle().then(<span class="hljs-function"><span class="hljs-params">()</span>=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ALL WORK DONE'</span>))
+<span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> queue.start()</code></pre>
+				<h1 id="documentation">Documentation</h1>
+				<p><a href="https://cancerberosgx.github.io/commands-queue/index.html">API docs</a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
