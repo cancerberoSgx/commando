@@ -39,3 +39,7 @@ const results = await queue.start((cmd, result)=>{
 })
 console.log('ALL WORK DONE')
 ```
+
+# Documentation
+
+[API docs](https://cancerberosgx.github.io/commands-queue/index.html)
