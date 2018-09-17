@@ -1,4 +1,4 @@
-import { Commando } from '../../src';
+import { CommandsQueue } from '../../src';
 import { test, cat, rm } from 'shelljs';
 
 describe('commander', () => {
@@ -9,19 +9,32 @@ describe('commander', () => {
   afterEach(() => {
     rm('-f', 'tmp*.*')
   })
-  it('concurrency: 1', async done => {
 
-    const cmd = new Commando({
+
+  it('result', async done => {
+    const cmd = new CommandsQueue({
+      concurrency: 1,
+      shellConfig: {
+        silent: true
+      }
+    })
+    let result = await cmd.exec({ value: 'echo "hello"', execOptions: { cwd: '.' }, shellConfig: { silent: true } })
+    expect(result.code).toBe(0)
+    expect(result.stdout).toBe('hello\n')
+    expect(result.stderr).toBe('')
+    done()
+  })
+
+  it('concurrency: 1', async done => {
+    const cmd = new CommandsQueue({
       concurrency: 1
     })
-
     expect(test('-f', 'tmp.txt')).toBeFalsy()
 
     cmd.exec('sleep 0.2 && echo "hello" > tmp.txt')
     cmd.exec('sleep 0.2 && echo "hello2" > tmp2.txt')
 
     await sleep(250)
-
     expect(cat('tmp.txt').toString()).toBe('hello\n')
     expect(test('-f', 'tmp2.txt')).toBeFalsy()
 
@@ -32,7 +45,7 @@ describe('commander', () => {
   })
   it('concurrency: 2', async done => {
 
-    const cmd = new Commando({
+    const cmd = new CommandsQueue({
       concurrency: 2
     })
 

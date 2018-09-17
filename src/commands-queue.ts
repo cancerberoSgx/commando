@@ -1,29 +1,33 @@
 
 const PQueue = require('p-queue');
-import { exec as execImpl } from 'shelljs'
+import { exec as execImpl, config as shellConfig } from 'shelljs'
 import { Cmd, Config, Result } from '.';
 
-export class Commando {
+export class CommandsQueue {
   private queue: any
 
   constructor(protected config: Config) {
     this.queue = new PQueue(config)
+    Object.assign(shellConfig, config.shellConfig || {})
   }
 
-  exec(cmd: Cmd | string): Promise<Result> {
+  exec(command: Cmd | string): Promise<Result> {
     return this.queue.add(() => new Promise(resolve => {
-      execImpl(typeof cmd === 'string' ? cmd : cmd.value, { async: true }, () => {
-        resolve(arguments)
+      const cmd: Cmd = typeof command === 'string' ? { value: command } : command
+      Object.assign(shellConfig, cmd.shellConfig || {})
+      const value = cmd.value
+      const execOptions = Object.assign({}, cmd.execOptions || {}, { async: true })
+      const process = execImpl(value, execOptions, (code: number, stdout: string, stderr: string) => {
+        const result: Result = {
+          code,
+          stdout,
+          stderr,
+          cmd: typeof cmd === 'string' ? { value: cmd } : cmd,
+          process
+        }
+        resolve(result)
       })
     }))
   }
 
-  // buildPromise(cmd: Cmd | string): Promise<Result> {
-  //   //TODO: util.promisify
-  //   return new Promise(resolve => {
-  //     execImpl(typeof cmd === 'string' ? cmd : cmd.value, { async: true }, () => {
-  //       resolve(arguments)
-  //     })
-  //   })
-  // }
 }
