@@ -1,7 +1,7 @@
 {
-  "name": "commando",
-  "version": "0.0.1",
-  "description": "execute command line in a synchronized fashion",
+  "name": "commands-queue",
+  "version": "0.0.2",
+  "description": "execute command line in a queue",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {

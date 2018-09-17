@@ -9,4 +9,4 @@ export class Cmd {
   value: string
 }
 
-export * from './commando'
+export * from './commands-queue'
