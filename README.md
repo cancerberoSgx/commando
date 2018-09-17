@@ -1,6 +1,6 @@
 # Commando
 
-** execute command line in a synchronized fashion **
+**execute command line in a synchronized fashion**
 
  * concurrently
  * in a concurrent sized queue

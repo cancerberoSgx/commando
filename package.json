@@ -1,7 +1,7 @@
 {
   "name": "commando",
   "version": "0.0.1",
-  "description": "execute commands in a synchronized way",
+  "description": "execute command line in a synchronized fashion",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {
