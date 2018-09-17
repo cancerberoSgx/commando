@@ -2,22 +2,59 @@ import { Commando } from '../../src';
 import { test, cat, rm } from 'shelljs';
 
 describe('commander', () => {
-  it('1', async done => {
-
+  beforeEach(() => {
     rm('-f', 'tmp*.*')
+    expect(test('-f', 'tmp.txt')).toBeFalsy()
+  })
+  afterEach(() => {
+    rm('-f', 'tmp*.*')
+  })
+  it('concurrency: 1', async done => {
+
     const cmd = new Commando({
       concurrency: 1
     })
+
     expect(test('-f', 'tmp.txt')).toBeFalsy()
 
-    await cmd.exec('sleep 0.7 && echo "hello" > tmp.txt')
+    cmd.exec('sleep 0.2 && echo "hello" > tmp.txt')
+    cmd.exec('sleep 0.2 && echo "hello2" > tmp2.txt')
+
+    await sleep(250)
+
     expect(cat('tmp.txt').toString()).toBe('hello\n')
     expect(test('-f', 'tmp2.txt')).toBeFalsy()
-    await cmd.exec('sleep 0.7 && echo "hello2.txt">tmp2.txt')
 
-    expect(test('-f', 'tmp.txt')).toBeTruthy()
+    await sleep(250)
+    expect(cat('tmp2.txt').toString()).toBe('hello2\n')
 
-    rm('-f', 'tmp*.*')
+    done()
+  })
+  it('concurrency: 2', async done => {
+
+    const cmd = new Commando({
+      concurrency: 2
+    })
+
+    expect(test('-f', 'tmp.txt')).toBeFalsy()
+    expect(test('-f', 'tmp2.txt')).toBeFalsy()
+
+    cmd.exec('sleep 0.2 && echo "hello" > tmp.txt')
+    cmd.exec('sleep 0.2 && echo "hello2" > tmp2.txt')
+
+    await sleep(250)
+
+    expect(cat('tmp.txt').toString()).toBe('hello\n')
+    expect(cat('tmp2.txt').toString()).toBe('hello2\n')
+
     done()
   })
 })
+
+function sleep(ms: number): Promise<any> {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, ms)
+  })
+}
