@@ -1,14 +1,16 @@
 import { ShellConfig, ShellReturnValue, ExecOptions } from 'shelljs';
 import { ChildProcess } from 'child_process';
 
-export class Config {
-  /** number of commands being executed concurrently. Default is 1 which means commands will be executed serially 1 by 1*/
-  concurrency?: number = 1
+import PQueue from 'p-queue'
+
+export interface Config extends PQueue.Options<any> {
+  // /** number of commands being executed concurrently. Default is 1 which means commands will be executed serially 1 by 1*/
+  // concurrency?: number
 
   shellConfig?: Partial<ShellConfig>
 }
 
-export class Result {
+export interface Result {
   process: ChildProcess
   code: number
   stdout: string
@@ -16,7 +18,7 @@ export class Result {
   cmd: Cmd
 }
 
-export class Cmd {
+export interface Cmd {
   value: string
   execOptions?: Partial<ExecOptions>
   shellConfig?: Partial<ShellConfig>

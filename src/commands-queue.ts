@@ -1,5 +1,7 @@
 
-const PQueue = require('p-queue');
+// const PQueue = require('p-queue');
+import PQueue from 'p-queue'
+
 import { exec as execImpl, config as shellConfig } from 'shelljs'
 import { Cmd, Config, Result } from '.';
 
