@@ -1,5 +1,3 @@
-
-// const PQueue = require('p-queue');
 import PQueue from 'p-queue'
 
 import { exec as execImpl, config as shellConfig } from 'shelljs'
@@ -32,6 +30,21 @@ export class CommandsQueue {
     }))
   }
 
+  /**
+   * Adds a sync or async task to the queue. Always returns a promise.
+   * @param fn Promise-returning/async function.
+   * @param options 
+   */
+  add<T>(fn: PQueue.Task<T>, options?: PQueue.QueueAddOptions): Promise<T> {
+    return this.queue.add(fn, options)
+  }
+  /**
+  * Same as .add(), but accepts an array of sync or async functions and returns a promise that resolves when
+  * all functions are resolved.
+  */
+  addAll<T>(fns: PQueue.Task<T>[], options?: PQueue.QueueAddOptions): Promise<T> {
+    return this.queue.add(fns, options)
+  }
   pause(): void {
     this.queue.pause()
   }
